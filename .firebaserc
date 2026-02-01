@@ -1,0 +1,15 @@
+{
+  "projects": {
+    "default": "smart-study-planner-acbf6"
+  },
+  "targets": {
+    "smart-study-planner-acbf6": {
+      "hosting": {
+        "main": [
+          "smart-study-planner-c486"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}
