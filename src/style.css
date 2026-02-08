@@ -48,11 +48,52 @@ h1 {
   will-change: filter;
   transition: filter 300ms;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+
+
+.task-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
-.logo.vanilla:hover {
-  filter: drop-shadow(0 0 2em #f7df1eaa);
+.task {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+
+  background-color: #1a1a1a;
+  border-radius: 10px;
+
+  min-width: 10rem;
+
+  will-change: filter;
+  transition: filter 300ms;
+}
+.task-title-group {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+.task-completion-group {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+}
+.class-name {
+  background-color: #4349be;
+  padding: 0.25rem 0.67rem;
+  border-radius: 10px;
+}
+.task-name {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-left: 1rem;
+}
+
+.task:hover {
+  filter: drop-shadow(0 0 0.75em #4349bebd);
 }
 
 .card {
