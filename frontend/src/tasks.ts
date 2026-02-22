@@ -1,10 +1,10 @@
 export type Task = {
-  course: String,
+  course: string,
   created_at: Date,
   due_date: Date,
-  id: Number,
-  status: String,
-  title: String
+  id: number,
+  status: string,
+  title: string
 }
 
 export const API_URL = 'https://studyplanner.it.com/api/';
@@ -14,6 +14,11 @@ export async function loadTasks(list: HTMLDivElement) {
   list.innerHTML = 'Loading...';
   const tasks = await getTasks();
   list.innerHTML = '';
+  tasks.sort((a, b) => {
+    if (a.due_date < b.due_date) return -1;
+    if (a.due_date == b.due_date) return 0;
+    return 1;
+  });
   tasks.forEach((task) => {
     const element = createTaskElement(task);
     list.insertAdjacentHTML('beforeend', element);
@@ -40,12 +45,13 @@ export async function createTask(course: string, due_date: string, title: string
         title: title
     })
   });
+  console.log(response);
   const data: unknown = response.json();
   console.log(data);
-  return data != null;
+  return response.ok && response.status == 201;
 }
 export function createTaskElement(task: Task) {
-  return `<div class="task card">
+  return `<div class="task card" task-id="${task.id}">
             <div class="task-title-group">
               <div class="class-name">${task.course}</div>
               <div class="task-name">${task.title}</div>
