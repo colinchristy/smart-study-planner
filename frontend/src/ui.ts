@@ -1,20 +1,10 @@
-import { createTask, loadTasks } from "./tasks";
+import { createTask, deleteTask, loadTasks, type Task } from "./tasks";
 
 export function showOverlay(content: HTMLDivElement) {
     const overlay: HTMLDivElement = document.createElement('div');
     overlay.id = 'overlay';
     overlay.appendChild(content);
     document.body.append(overlay);
-    document.addEventListener('click', (e) => {
-        if (e) {
-            if (e.target) {
-                const target = e.target as HTMLElement;
-                if (target.id == 'overlay') {
-                    hideOverlay();
-                }
-            }
-        }
-    })
 }
 export function getCreateTaskContent() {
     const content: HTMLDivElement = document.createElement('div');
@@ -54,3 +44,97 @@ async function onCreateClicked() {
     const mainList = document.querySelector('#main-task-list') as HTMLDivElement;
     loadTasks(mainList);
 }
+function selectTaskCard(taskCard: HTMLElement) {
+    unselectTaskCard();
+    taskCard.classList.add('selected');
+}
+function unselectTaskCard() {
+    const oldSelectedTaskCard = document.querySelector('.task.card.selected');
+    if (oldSelectedTaskCard) oldSelectedTaskCard.classList.remove('selected');
+}
+document.addEventListener('click', (e) => {
+    if (!e || !e?.target) return;
+
+    const target = e.target as HTMLElement;
+
+    // if (!target.closest('#context-menu')) {
+    //     unselectTaskCard();
+    // }
+
+    const clickedTaskCard = target.closest('.task.card') as HTMLElement;
+    if (clickedTaskCard) {
+        selectTaskCard(clickedTaskCard);
+    }
+    if (target.id == 'overlay') {
+        hideOverlay();
+    }
+    if (!target.closest('#context-menu')) {
+        removeExistingContextMenu();
+    }
+});
+function getContextMenuContent() {
+    const content = document.createElement('div');
+    content.innerHTML = '<div class="context-menu-item warning" id="item-delete-task">Delete Task</div>';
+    content.id = 'context-menu';
+    return content;
+}
+function renderContextMenu(x: number, y: number) {
+    removeExistingContextMenu();
+    const contextMenu = getContextMenuContent();
+    document.body.append(contextMenu);
+    contextMenu.style.position = 'absolute';
+    contextMenu.style.top = String(y) + "px";
+    contextMenu.style.left = String(x) + "px";
+
+    const deleteTaskDiv = document.querySelector('#item-delete-task') as HTMLElement;
+    deleteTaskDiv.addEventListener('click', showDeleteWarningOverlay);
+}
+function removeExistingContextMenu() {
+    const contextMenu = document.querySelector('#context-menu') as HTMLElement;
+    if (contextMenu) contextMenu.remove();
+}
+function getDeleteWarningContent(titleGroupContents: string) {
+    const content: HTMLDivElement = document.createElement('div');
+    content.innerHTML = `<div style="font-size: 2rem;">Delete Task</div>
+                        <div style="margin: 1rem 0">${titleGroupContents}</div>
+                        <div class="group-two-horizontal">
+                            <button type="submit" id="button-overlay-confirm-delete-task" class="warning" width="50%">Delete</button>
+                            <button id="button-overlay-cancel-delete-task" width="50%">Cancel</button>
+                        </div>`;
+    return content;
+}
+function showDeleteWarningOverlay() {
+    removeExistingContextMenu();
+    const selectedTaskTitleGroup = (document.querySelector('.task.card.selected > .task-title-group') as HTMLElement) 
+    showOverlay(getDeleteWarningContent(selectedTaskTitleGroup.outerHTML));
+
+    
+    const confirmDeleteButton = document.querySelector('#button-overlay-confirm-delete-task') as HTMLButtonElement;
+    confirmDeleteButton.addEventListener('click', onConfirmDeleteClicked);
+    const cancelDeleteButton = document.querySelector('#button-overlay-cancel-delete-task') as HTMLButtonElement;
+    cancelDeleteButton.addEventListener('click', hideOverlay);
+}
+async function onConfirmDeleteClicked() {
+    const selectedTask = document.querySelector('.task.card.selected') as HTMLElement;
+    const id = selectedTask.getAttribute('task-id');
+
+    if (!id) return;
+
+    console.log(await deleteTask(id));
+    
+    selectedTask.remove();
+    hideOverlay();
+}
+document.addEventListener('contextmenu', (e) => {
+    if (!e || !e?.target) return;
+    e.preventDefault();
+    
+    removeExistingContextMenu();
+
+    const target = e.target as HTMLElement;
+    const clickedTaskCard = target.closest('.task.card') as HTMLElement;
+    if (clickedTaskCard) {
+        selectTaskCard(clickedTaskCard);
+        renderContextMenu(e.clientX, e.clientY);
+    }
+});

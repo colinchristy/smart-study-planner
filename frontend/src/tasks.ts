@@ -62,3 +62,11 @@ export function createTaskElement(task: Task) {
             </div>
           </div>`
 }
+
+export async function deleteTask(id: string) {
+  const response = await fetch(TASKS_URL + id, {
+    method: 'DELETE',
+  });
+  console.log(response);
+  return response.ok && response.status == 204;
+}
