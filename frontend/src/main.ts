@@ -1,5 +1,5 @@
 import './style.css'
-import { loadTasks, deleteTask, createTask } from './tasks'
+import { loadTasks, deleteTask, createTask, updateTaskStatus } from './tasks'
 import { showCreateTaskOverlay } from './ui';
 
 const mainList = document.querySelector('#main-task-list') as HTMLDivElement;

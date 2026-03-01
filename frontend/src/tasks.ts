@@ -1,3 +1,5 @@
+import { createTaskElement } from "./ui";
+
 export type Task = {
   course: string,
   created_at: Date,
@@ -50,17 +52,21 @@ export async function createTask(course: string, due_date: string, title: string
   console.log(data);
   return response.ok && response.status == 201;
 }
-export function createTaskElement(task: Task) {
-  return `<div class="task card" task-id="${task.id}">
-            <div class="task-title-group">
-              <div class="class-name">${task.course}</div>
-              <div class="task-name">${task.title}</div>
-            </div>
-            <div class="task-completion-group">
-              <div class="task-due-date">Due ${task.due_date}</div>
-              <div class="task-checkbox"><input type="checkbox"></div>
-            </div>
-          </div>`
+
+export async function updateTaskStatus(id: string, newStatus: string) {
+  const response = await fetch(TASKS_URL + id, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      status: newStatus
+    })
+  });
+  console.log(response);
+  const data: unknown = response.json();
+  console.log(data);
+  return response.ok && response.status == 200;
 }
 
 export async function deleteTask(id: string) {

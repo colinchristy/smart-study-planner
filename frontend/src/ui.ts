@@ -1,10 +1,22 @@
-import { createTask, deleteTask, loadTasks, type Task } from "./tasks";
+import { createTask, deleteTask, loadTasks, updateTaskStatus, type Task } from "./tasks";
 
 export function showOverlay(content: HTMLDivElement) {
     const overlay: HTMLDivElement = document.createElement('div');
     overlay.id = 'overlay';
     overlay.appendChild(content);
     document.body.append(overlay);
+}
+export function createTaskElement(task: Task) {
+  return `<div class="task card" task-id="${task.id}">
+            <div class="task-title-group">
+              <div class="class-name">${task.course}</div>
+              <div class="task-name">${task.title}</div>
+            </div>
+            <div class="task-completion-group">
+              <div class="task-due-date">Due ${task.due_date}</div>
+              <input type="checkbox" ${(task.status == "completed") ? 'checked' : ''}>
+            </div>
+          </div>`
 }
 export function getCreateTaskContent() {
     const content: HTMLDivElement = document.createElement('div');
@@ -61,10 +73,20 @@ document.addEventListener('click', (e) => {
     //     unselectTaskCard();
     // }
 
+    // Check if clicked within task card
     const clickedTaskCard = target.closest('.task.card') as HTMLElement;
     if (clickedTaskCard) {
         selectTaskCard(clickedTaskCard);
+
+        const clickedCheckbox = target.closest('input[type="checkbox"]') as HTMLInputElement;
+        if (clickedCheckbox) {
+            const taskId = clickedTaskCard.getAttribute('task-id') as string;
+            const newStatus = (clickedCheckbox.checked) ? 'completed' : 'pending';
+
+            updateTaskStatus(taskId, newStatus);
+        }
     }
+    
     if (target.id == 'overlay') {
         hideOverlay();
     }
