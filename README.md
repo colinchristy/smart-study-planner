@@ -2,6 +2,13 @@
 
 Smart Study Planner is a web-based application that helps students manage assignments, track deadlines, and monitor task completion.
 
+## Team
+- Dustin De Luna
+- Colin Christy
+- Aasvi Patel
+- Cam Iwema
+- Isaiah Lubia
+
 ## Features
 - Create and manage tasks
 - Track due dates
