@@ -98,5 +98,38 @@ Relationship representation:
 - `status` indicates whether a task is pending or completed.
 - Each task is associated with a user through the `user_id` foreign key.
 
+## Repository Structure
+smart-study-planner/
+│
+├── backend/                                   # Django backend application
+│   │
+│   ├── planner/                                # Main backend app
+│   │   ├── models.py                           # Database models (Task schema)
+│   │   ├── serializers.py                      # API serializers
+│   │   ├── views.py                            # API endpoints and business logic
+│   │   ├── urls.py                             # API routing configuration
+│   │   ├── tests.py                            # Backend tests
+│   │   │
+│   │   └── migrations/                         # Database migrations
+│   │
+│   ├── smart_study_planner/                    # Django project configuration
+│   │   ├── settings.py                         # Project settings
+│   │   ├── urls.py                             # Root URL configuration
+│   │   ├── asgi.py                             # ASGI server configuration
+│   │   └── wsgi.py                             # WSGI server configuration
+│   │
+│   └── manage.py                               # Django management entry point
+│
+├── frontend/                                   # Frontend application
+│   └── (frontend UI files)                     # Interface components and pages
+│
+├── docs/                                       # Project documentation
+│   ├── Smart_Study_Planner_ERD_v1.png          # Entity Relationship Diagram
+│   └── database_schema.md                      # Database schema documentation
+│
+├── README.md                                   # Project overview and instructions
+├── LICENSE                                     # MIT License
+└── .gitignore                                  # Git ignored files
+
 ## License
 MIT - see the [LICENSE](LICENSE) file for details.
