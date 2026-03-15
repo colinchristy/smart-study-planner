@@ -156,7 +156,7 @@ input[type='checkbox'] {
   background-color: #ffffff;
 } */
 
-@media (prefers-color-scheme: light) {
+/* @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
     background-color: #ffffff;
@@ -167,7 +167,7 @@ input[type='checkbox'] {
   button {
     background-color: #f9f9f9;
   }
-}
+} */
 
 #overlay {
   position: fixed;

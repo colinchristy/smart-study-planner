@@ -1,6 +1,9 @@
+import { requireAuth } from './auth';
 import './style.css'
 import { loadTasks, deleteTask, createTask, updateTaskStatus } from './tasks'
 import { showCreateTaskOverlay } from './ui';
+
+requireAuth();
 
 const mainList = document.querySelector('#main-task-list') as HTMLDivElement;
 const buttonCreateTask = document.querySelector('#button-create-task') as HTMLButtonElement;
