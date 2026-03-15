@@ -131,6 +131,3 @@ smart-study-planner/
 ├── README.md                                  # Project overview and instructions
 ├── LICENSE                                    # MIT License
 └── .gitignore                                 # Git ignored files
-
-## License
-MIT - see the [LICENSE](LICENSE) file for details.
