@@ -1,3 +1,4 @@
+import { createClass } from "./classes";
 import { createTask, deleteTask, loadTasks, updateTaskStatus, type Task } from "./tasks";
 
 export function showOverlay(content: HTMLDivElement) {
@@ -33,14 +34,27 @@ export function getCreateTaskContent() {
 export function showCreateTaskOverlay() {
     showOverlay(getCreateTaskContent());
     const createButton = document.querySelector('#button-overlay-create-task') as HTMLButtonElement;
-    createButton.addEventListener('click', onCreateClicked);
+    createButton.addEventListener('click', onCreateTaskClicked);
+}
+export function getCreateClassContent() {
+    const content: HTMLDivElement = document.createElement('div');
+    content.innerHTML = `<div style="font-size: 2rem;">New Class</div>
+                        <label for="course">Course Name</label>
+                        <input type="text" name="course" id="input-course">
+                        <button type="submit" id="button-overlay-create-class">Create</button>`;
+    return content;
+}
+export function showCreateClassOverlay() {
+    showOverlay(getCreateClassContent());
+    const createButton = document.querySelector('#button-overlay-create-class') as HTMLButtonElement;
+    createButton.addEventListener('click', onCreateClassClicked);
 }
 export function hideOverlay() {
     const overlay = document.querySelector('#overlay');
     if (overlay) overlay.remove();
 }
 
-async function onCreateClicked() {
+async function onCreateTaskClicked() {
     const inputCourse = document.querySelector('#input-course') as HTMLInputElement;
     const inputTitle = document.querySelector('#input-title') as HTMLInputElement;
     const inputDueDate = document.querySelector('#input-due-date') as HTMLInputElement;
@@ -49,12 +63,30 @@ async function onCreateClicked() {
     const title = inputTitle.value;
     const dueDate = inputDueDate.value;
     console.log(course, title, dueDate);
-    console.log(await createTask(course, dueDate, title));
+    if (!await createTask(course, dueDate, title)) {
+        alert('An error occurred when creating a task. Please make sure to fill out all fields and have a good Internet connection.');
+        return;
+    }
+
+    alert(`Task "${course} - ${title}" created successfully.`);
 
     hideOverlay();
 
     const mainList = document.querySelector('#main-task-list') as HTMLDivElement;
     loadTasks(mainList);
+}
+async function onCreateClassClicked() {
+    const inputCourse = document.querySelector('#input-course') as HTMLInputElement;
+
+    const course = inputCourse.value;
+    if (!await createClass(course)) {
+        alert('An error occurred when creating a class. Please make sure to fill out all fields and have a good Internet connection.');
+        return;
+    }
+
+    alert(`Class "${course}" created successfully.`);
+
+    hideOverlay();
 }
 function selectTaskCard(taskCard: HTMLElement) {
     unselectTaskCard();

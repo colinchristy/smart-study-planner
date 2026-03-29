@@ -221,6 +221,12 @@ button.warning:hover {
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
 }
+
+.gap-small {
+  display: flex;
+  gap: 0.5rem;
+}
+
 .hide {
   display: none;
 }

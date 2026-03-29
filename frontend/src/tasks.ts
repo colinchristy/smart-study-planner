@@ -1,3 +1,4 @@
+import { API_URL } from "./apiUrl";
 import { createTaskElement } from "./ui";
 
 export type Task = {
@@ -9,7 +10,6 @@ export type Task = {
   title: string
 }
 
-export const API_URL = 'https://studyplanner.it.com/api/';
 export const TASKS_URL = API_URL + 'tasks/';
 
 export async function loadTasks(list: HTMLDivElement) {
