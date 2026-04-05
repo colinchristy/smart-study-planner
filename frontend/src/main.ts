@@ -1,10 +1,14 @@
-import { API_URL } from './apiUrl';
-import { requireAuth } from './auth';
+import { auth } from './auth';
+import { getClasses } from './classes';
 import './style.css'
 import { loadTasks } from './tasks'
 import { showCreateClassOverlay, showCreateTaskOverlay } from './ui';
 
-requireAuth();
+await auth.requireAuth();
+
+const buttonSignOut = document.querySelector('#button-sign-out') as HTMLButtonElement;
+
+buttonSignOut.addEventListener('click', () => { auth.signOut() });
 
 const mainList = document.querySelector('#main-task-list') as HTMLDivElement;
 const buttonCreateTask = document.querySelector('#button-create-task') as HTMLButtonElement;
@@ -22,17 +26,4 @@ buttonCreateClass.addEventListener('click', showCreateClassOverlay);
 //     deleteTask(String(i));
 // }
 loadTasks(mainList);
-
-const LOGIN_URL = API_URL + 'login';
-
-const response = await fetch(LOGIN_URL, {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify({
-    username: "colinchristy",
-    password: "123456"
-  })
-});
-console.log(await response.json());
+console.log(await getClasses());
