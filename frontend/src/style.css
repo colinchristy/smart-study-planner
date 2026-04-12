@@ -29,6 +29,9 @@ a:hover {
   display: flex;
   justify-content: space-between;
   background-color: #3d43c3;
+  position: sticky;
+  top: 0;
+  z-index: 5;
 }
 .nav-item {
   padding: 1rem;
@@ -61,12 +64,13 @@ h1 {
 #header {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   align-items: end;
   justify-content: space-between;
   padding: 2rem;
   margin: 0;
   position: sticky;
-  top: 0;
+  top: 4rem;
   z-index: 5;
   background-color: #242424;
 }

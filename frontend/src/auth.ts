@@ -98,4 +98,4 @@ class AuthManager {
     }
 }
 
-export const auth = new AuthManager()
+export const auth = new AuthManager();

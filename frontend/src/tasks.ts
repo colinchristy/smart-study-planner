@@ -34,10 +34,10 @@ export async function getTasks(): Promise<Task[]> {
       'Authorization': 'Token ' + auth.getToken(),
     }
   });
-  const data: unknown = response.json();
+  const data: Task[] = await response.json();
   console.log(data);
 
-  return data as Task[];
+  return data;
 }
 export async function createTask(course: string, due_date: string, title: string) {
   const response = await fetch(TASKS_URL, {
@@ -53,7 +53,7 @@ export async function createTask(course: string, due_date: string, title: string
     })
   });
   console.log(response);
-  const data: unknown = response.json();
+  const data = await response.json();
   console.log(data);
   return response.ok && response.status == 201;
 }
@@ -70,7 +70,7 @@ export async function updateTaskStatus(id: string, newStatus: string) {
     })
   });
   console.log(response);
-  const data: unknown = response.json();
+  const data = await response.json();
   console.log(data);
   return response.ok && response.status == 200;
 }

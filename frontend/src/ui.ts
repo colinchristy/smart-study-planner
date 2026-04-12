@@ -1,4 +1,4 @@
-import { createClass } from "./classes";
+import { classManager } from "./classes";
 import { createTask, deleteTask, loadTasks, updateTaskStatus, type Task } from "./tasks";
 
 export function showOverlay(content: HTMLDivElement) {
@@ -20,10 +20,19 @@ export function createTaskElement(task: Task) {
           </div>`
 }
 export function getCreateTaskContent() {
+    const classes = classManager.getClasses();
+    let classesSelectOptions = '';
+
+    classes.forEach((c) => {
+        classesSelectOptions += `<option value="${c.name}">${c.name}</option>`
+    })
+
     const content: HTMLDivElement = document.createElement('div');
     content.innerHTML = `<div style="font-size: 2rem;">New Task</div>
-                        <label for="course">Course</label>
-                        <input type="text" name="course" id="input-course">
+                        <label for="class">Class</label>
+                        <select name="class" id="select-class">
+                            ${classesSelectOptions}
+                        </select>
                         <label for="title">Title</label>
                         <input type="text" name="title" id="input-title">
                         <label for="due-date">Due Date</label>
@@ -55,20 +64,20 @@ export function hideOverlay() {
 }
 
 async function onCreateTaskClicked() {
-    const inputCourse = document.querySelector('#input-course') as HTMLInputElement;
+    const selectClass = document.querySelector('#select-class') as HTMLSelectElement;
     const inputTitle = document.querySelector('#input-title') as HTMLInputElement;
     const inputDueDate = document.querySelector('#input-due-date') as HTMLInputElement;
 
-    const course = inputCourse.value;
+    const classValue = selectClass.value;
     const title = inputTitle.value;
     const dueDate = inputDueDate.value;
-    console.log(course, title, dueDate);
-    if (!await createTask(course, dueDate, title)) {
+    console.log(classValue, title, dueDate);
+    if (!await createTask(classValue, dueDate, title)) {
         alert('An error occurred when creating a task. Please make sure to fill out all fields and have a good Internet connection.');
         return;
     }
 
-    alert(`Task "${course} - ${title}" created successfully.`);
+    alert(`Task "${classValue} - ${title}" created successfully.`);
 
     hideOverlay();
 
@@ -79,8 +88,8 @@ async function onCreateClassClicked() {
     const inputCourse = document.querySelector('#input-course') as HTMLInputElement;
 
     const course = inputCourse.value;
-    if (!await createClass(course)) {
-        alert('An error occurred when creating a class. Please make sure to fill out all fields and have a good Internet connection.');
+    if (!await classManager.createClass(course)) {
+        alert('An error occurred when creating a class.');
         return;
     }
 
