@@ -12,7 +12,6 @@ export async function getClasses() {
   });
   console.log(response);
   const data: unknown = response.json();
-  console.log(data);
   return data;
 }
 export async function createClass(name: string) {
@@ -26,8 +25,10 @@ export async function createClass(name: string) {
       name: name
     })
   });
+  console.log("Create class response: ");
   console.log(response);
   const data: unknown = response.json();
+  console.log("Create class data: ");
   console.log(data);
   return response.ok && response.status == 200;
 }

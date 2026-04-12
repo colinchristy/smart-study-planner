@@ -2,10 +2,14 @@ import { API_URL } from "./apiUrl";
 
 class AuthManager {
     private token: string;
+    private username: string;
 
     public constructor() {
         const storageToken = localStorage.getItem('token');
         this.token = (storageToken) ? storageToken : '';
+
+        const storageUsername = localStorage.getItem('username');
+        this.username = (storageUsername) ? storageUsername : '';
     }
 
     public getToken(): string {
@@ -77,7 +81,15 @@ class AuthManager {
         if (!data?.token) return false;
 
         this.setToken(data.token);
+        this.setUsername(username);
         return true;
+    }
+    public getUsername() {
+        return this.username;
+    }
+    public setUsername(username: string) {
+        this.username = username;
+        localStorage.setItem('username', username);
     }
 
     public signOut() {
