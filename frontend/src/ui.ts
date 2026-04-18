@@ -1,5 +1,5 @@
 import { classManager } from "./classes";
-import { createTask, deleteTask, loadTasks, updateTaskStatus, type Task } from "./tasks";
+import { createTask, deleteTask, loadTasks, updateTaskData, updateTaskStatus, type Task } from "./tasks";
 
 export function showOverlay(content: HTMLDivElement) {
     const overlay: HTMLDivElement = document.createElement('div');
@@ -73,7 +73,7 @@ async function onCreateTaskClicked() {
     const dueDate = inputDueDate.value;
     console.log(classValue, title, dueDate);
     if (!await createTask(classValue, dueDate, title)) {
-        alert('An error occurred when creating a task. Please make sure to fill out all fields and have a good Internet connection.');
+        alert('An error occurred when creating a task. Please make sure to fill out all fields.');
         return;
     }
 
@@ -137,7 +137,10 @@ document.addEventListener('click', (e) => {
 });
 function getContextMenuContent() {
     const content = document.createElement('div');
-    content.innerHTML = '<div class="context-menu-item warning" id="item-delete-task">Delete Task</div>';
+    content.innerHTML = `
+        <div class="context-menu-item" id="item-edit-task">Edit Task</div>
+        <div class="context-menu-item warning" id="item-delete-task">Delete Task</div>
+        `;
     content.id = 'context-menu';
     return content;
 }
@@ -148,6 +151,11 @@ function renderContextMenu(x: number, y: number) {
     contextMenu.style.position = 'absolute';
     contextMenu.style.top = String(y) + "px";
     contextMenu.style.left = String(x) + "px";
+
+    // Set functionality for options
+
+    const editTaskDiv = document.querySelector('#item-edit-task') as HTMLElement;
+    editTaskDiv.addEventListener('click', showEditTaskOverlay);
 
     const deleteTaskDiv = document.querySelector('#item-delete-task') as HTMLElement;
     deleteTaskDiv.addEventListener('click', showDeleteWarningOverlay);
@@ -187,6 +195,95 @@ async function onConfirmDeleteClicked() {
     
     selectedTask.remove();
     hideOverlay();
+}
+function getEditTaskContent() {
+    const classes = classManager.getClasses();
+    let classesSelectOptions = '';
+
+    classes.forEach((c) => {
+        classesSelectOptions += `<option value="${c.name}">${c.name}</option>`
+    })
+
+    const content: HTMLDivElement = document.createElement('div');
+    content.innerHTML = `<div style="font-size: 2rem;">Edit Task</div>
+                        <label for="class">Class</label>
+                        <select name="class" id="select-class">
+                            ${classesSelectOptions}
+                        </select>
+                        <label for="title">Title</label>
+                        <input type="text" name="title" id="input-title">
+                        <label for="due-date">Due Date</label>
+                        <input type="date" name="due-date" id="input-due-date">
+                        <button type="submit" id="button-overlay-edit-task">Save Edits</button>`;
+    return content;
+}
+function showEditTaskOverlay() {
+    removeExistingContextMenu();
+    showOverlay(getEditTaskContent());
+
+    // Get existing task data
+    const selectedTask = document.querySelector('.task.card.selected') as HTMLElement;
+
+    const className = selectedTask.querySelector('.class-name')?.textContent;
+    const taskName = selectedTask.querySelector('.task-name')?.textContent;
+    const taskDueDate = selectedTask.querySelector('.task-due-date')?.textContent.slice(4);
+
+    if (!className || !taskName || !taskDueDate) {
+        alert("An error occurred when trying to load task data.");
+        return;
+    }
+
+    // Fill in data and set up button
+    const selectClass = document.querySelector('#select-class') as HTMLSelectElement;
+    selectClass.value = className;
+    const inputTitle = document.querySelector('#input-title') as HTMLInputElement;
+    inputTitle.value = taskName;
+    const inputDueDate = document.querySelector('#input-due-date') as HTMLInputElement;
+    inputDueDate.value = taskDueDate;
+
+    const saveEditsButton = document.querySelector('#button-overlay-edit-task') as HTMLButtonElement;
+    saveEditsButton.addEventListener('click', onEditTaskClicked);
+}
+async function onEditTaskClicked() {
+    const selectedTask = document.querySelector('.task.card.selected') as HTMLElement;
+    const id = selectedTask.getAttribute('task-id');
+
+    if (!id) {
+        alert("Error: 'id' for task not found.");
+        return;
+    }
+
+    const className = selectedTask.querySelector('.class-name')?.textContent;
+    const taskName = selectedTask.querySelector('.task-name')?.textContent;
+    const taskDueDate = selectedTask.querySelector('.task-due-date')?.textContent.slice(4);
+
+    const selectClass = document.querySelector('#select-class') as HTMLSelectElement;
+    const inputTitle = document.querySelector('#input-title') as HTMLInputElement;
+    const inputDueDate = document.querySelector('#input-due-date') as HTMLInputElement;
+
+    const classValue = selectClass.value;
+    const title = inputTitle.value;
+    const dueDate = inputDueDate.value;
+
+    // Check if the values are different
+    if (className == classValue && taskName == title && taskDueDate == dueDate) {
+        alert("No changes made!")
+        hideOverlay();
+        return;
+    }
+
+
+    if (!await updateTaskData(id, classValue, dueDate, title)) {
+        alert('An error occurred when creating a task. Please make sure to fill out all fields.');
+        return;
+    }
+
+    alert('Edits saved successfully.');
+
+    hideOverlay();
+
+    const mainList = document.querySelector('#main-task-list') as HTMLDivElement;
+    loadTasks(mainList);
 }
 document.addEventListener('contextmenu', (e) => {
     if (!e || !e?.target) return;

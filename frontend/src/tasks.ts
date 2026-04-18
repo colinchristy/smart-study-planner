@@ -58,6 +58,25 @@ export async function createTask(course: string, due_date: string, title: string
   return response.ok && response.status == 201;
 }
 
+export async function updateTaskData(id: string, course: string, due_date: string, title: string) {
+  const response = await fetch(TASKS_URL + id, {
+    method: 'PUT',
+    headers: {
+      'Authorization': 'Token ' + auth.getToken(),
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      course: course,
+      due_date: due_date,
+      title: title
+    })
+  });
+  console.log(response);
+  const data = await response.json();
+  console.log(data);
+  return response.ok && response.status == 200;
+}
+
 export async function updateTaskStatus(id: string, newStatus: string) {
   const response = await fetch(TASKS_URL + id, {
     method: 'PUT',

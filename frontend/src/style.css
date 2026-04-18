@@ -212,16 +212,21 @@ input[type='checkbox'] {
 }
 #context-menu {
   position: absolute;
+  display: flex;
+  flex-direction: column;
   background-color: #2b2b2b;
   border: solid 1px #fff;
 }
 .context-menu-item {
-  padding: 0.67rem 1rem;
+  padding: 0.5rem 1rem;
 }
 .context-menu-item:hover {
   filter: brightness(1.1);
   background-color: #2b2b2b;
   cursor: pointer;
+}
+.context-menu-item:not(:last-child) {
+  border-bottom: solid 1px #545454;
 }
 .warning {
   color: #ff5353;
