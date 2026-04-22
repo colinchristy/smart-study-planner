@@ -21,7 +21,7 @@ Smart Study Planner is a web-based application that helps students manage assign
 
 The following Entity Relationship Diagram represents the current backend database structure.
 
-https://github.com/colinchristy/smart-study-planner/blob/729d9d7aaf471951d10abd793d6338af16b37512/Smart_Study_Planner_ERD_v1.png
+<img width="1031" height="618" alt="image" src="https://github.com/user-attachments/assets/5609fff1-230b-4657-8933-954da823da0c" />
 
 ## Database Schema Documentation
 
