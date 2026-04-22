@@ -121,7 +121,7 @@ CLASS (1) -------- (N) PLANNER_TASK
 - The `PLANNER_TASK` table links tasks to both a user and a class.
 
 ## Repository Structure
-
+```text
 smart-study-planner/
 │
 ├── backend/                                   # Django backend application
