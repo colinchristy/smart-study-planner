@@ -67,7 +67,6 @@ Stores tasks created by users including course association, due dates, progress 
 | title | String | | Title of the task |
 | course | String | | Course associated with the task |
 | due_date | Date | | Deadline for the task |
-| percent_complete | Integer | | Percentage of task completion (0–100) |
 | status | String | | Current task status (pending or completed) |
 | created_at | DateTime | | Timestamp when the task was created |
 
@@ -94,7 +93,6 @@ Relationship representation:
 ## Schema Notes
 
 - `AUTH_USER` is managed by Django’s built-in authentication system.
-- `percent_complete` supports the **progress tracking dashboard** feature of the application.
 - `status` indicates whether a task is pending or completed.
 - Each task is associated with a user through the `user_id` foreign key.
 
