@@ -29,7 +29,10 @@ ALLOWED_HOSTS = [
     "studyplanner.it.com",
     "www.studyplanner.it.com",
     "3.128.171.1",
+    "127.0.0.1",
+    "localhost",
 ]
+
 
 
 # Application definition
@@ -50,11 +53,10 @@ INSTALLED_APPS = [
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny',
+    'rest_framework.permissions.AllowAny',
     ],
 }
 
