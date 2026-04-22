@@ -13,7 +13,8 @@ Smart Study Planner is a web-based application that helps students manage assign
 - Create and manage tasks
 - Track due dates
 - Mark tasks as completed
-- View tasks by course
+- View tasks by class
+- Organize tasks using classes
 
 ---
 
@@ -34,7 +35,8 @@ This section describes the database tables, keys, and relationships used in the 
 | Table Name | Description |
 |------------|-------------|
 | AUTH_USER | Stores user account information using Django’s built-in authentication system |
-| PLANNER_TASK | Stores tasks created by users including course information, due dates, and completion status |
+| CLASS | Stores classes created by users |
+| PLANNER_TASK | Stores tasks created by users and linked to a class |
 
 ---
 
@@ -52,53 +54,74 @@ Stores user authentication and account information. This table is provided by Dj
 
 **Primary Key**
 
+---
+
+## Table: CLASS
+
+**Description:**  
+Stores class information created by users. Each class belongs to a specific user.
+
+| Column | Type | Key | Description |
+|------|------|------|-------------|
+| id | Integer | PK | Unique identifier for each class |
+| name | String | | Name of the class |
+| user_id | Integer | FK | References the user who owns the class |
+
+**Primary Key**
 
 ---
 
 ## Table: PLANNER_TASK
 
 **Description:**  
-Stores tasks created by users including course association, due dates, progress tracking, and status.
+Stores tasks created by users, linked to a specific class, including deadlines and completion status.
 
 | Column | Type | Key | Description |
 |------|------|------|-------------|
 | id | Integer | PK | Unique identifier for each task |
 | user_id | Integer | FK | References the user who created the task |
+| class_id | Integer | FK | References the class associated with the task |
 | title | String | | Title of the task |
-| course | String | | Course associated with the task |
 | due_date | Date | | Deadline for the task |
 | status | String | | Current task status (pending or completed) |
 | created_at | DateTime | | Timestamp when the task was created |
 
 **Primary Key**
 
-
 ---
+
+## Table Relationships
 
 ## Table Relationships
 
 | Relationship | Type |
 |--------------|------|
+| AUTH_USER → CLASS | One-to-Many |
 | AUTH_USER → PLANNER_TASK | One-to-Many |
+| CLASS → PLANNER_TASK | One-to-Many |
 
-**Explanation**
+## Explanation
 
+- One **User** can create multiple **Classes**.
 - One **User** can create multiple **Tasks**.
-- Each **Task** belongs to exactly one **User**.
+- Each **Class** can contain multiple **Tasks**.
+- Each **Task** belongs to one **User** and one **Class**.
 
 Relationship representation:
+AUTH_USER (1) -------- (N) CLASS
+AUTH_USER (1) -------- (N) PLANNER_TASK
+CLASS (1) -------- (N) PLANNER_TASK
 
 ---
 
 ## Schema Notes
 
 - `AUTH_USER` is managed by Django’s built-in authentication system.
-- `status` indicates whether a task is pending or completed.
-- Each task is associated with a user through the `user_id` foreign key.
+- The `CLASS` table allows users to organize tasks by subject or category.
+- The `PLANNER_TASK` table links tasks to both a user and a class.
 
 ## Repository Structure
 
-```text
 smart-study-planner/
 │
 ├── backend/                                   # Django backend application
