@@ -1,5 +1,5 @@
 import { classManager } from "./classes";
-import { createTask, deleteTask, loadTasks, updateTaskData, updateTaskStatus, type Task } from "./tasks";
+import { type Task, taskManager } from "./tasks";
 
 export function showOverlay(content: HTMLDivElement) {
     const overlay: HTMLDivElement = document.createElement('div');
@@ -72,7 +72,7 @@ async function onCreateTaskClicked() {
     const title = inputTitle.value;
     const dueDate = inputDueDate.value;
     console.log(classValue, title, dueDate);
-    if (!await createTask(classValue, dueDate, title)) {
+    if (!await taskManager.createTask(classValue, dueDate, title)) {
         alert('An error occurred when creating a task. Please make sure to fill out all fields.');
         return;
     }
@@ -82,7 +82,7 @@ async function onCreateTaskClicked() {
     hideOverlay();
 
     const mainList = document.querySelector('#main-task-list') as HTMLDivElement;
-    loadTasks(mainList);
+    taskManager.updateTaskUI(mainList);
 }
 async function onCreateClassClicked() {
     const inputCourse = document.querySelector('#input-course') as HTMLInputElement;
@@ -124,7 +124,7 @@ document.addEventListener('click', (e) => {
             const taskId = clickedTaskCard.getAttribute('task-id') as string;
             const newStatus = (clickedCheckbox.checked) ? 'completed' : 'pending';
 
-            updateTaskStatus(taskId, newStatus);
+            taskManager.updateTaskStatus(taskId, newStatus);
         }
     }
     
@@ -191,7 +191,7 @@ async function onConfirmDeleteClicked() {
 
     if (!id) return;
 
-    console.log(await deleteTask(id));
+    console.log(await taskManager.deleteTask(id));
     
     selectedTask.remove();
     hideOverlay();
@@ -273,7 +273,7 @@ async function onEditTaskClicked() {
     }
 
 
-    if (!await updateTaskData(id, classValue, dueDate, title)) {
+    if (!await taskManager.updateTaskData(id, classValue, dueDate, title)) {
         alert('An error occurred when creating a task. Please make sure to fill out all fields.');
         return;
     }
@@ -283,7 +283,7 @@ async function onEditTaskClicked() {
     hideOverlay();
 
     const mainList = document.querySelector('#main-task-list') as HTMLDivElement;
-    loadTasks(mainList);
+    taskManager.updateTaskUI(mainList);
 }
 document.addEventListener('contextmenu', (e) => {
     if (!e || !e?.target) return;
