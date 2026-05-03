@@ -215,6 +215,10 @@ input[type='checkbox'] {
   gap: 1rem;
   min-width: 20rem;
   border-radius: 1rem;
+  border: solid 2px #fff;
+}
+#overlay > * > div:first-child {
+  border-bottom: solid 4px #535bf2;
 }
 #context-menu {
   position: fixed;
