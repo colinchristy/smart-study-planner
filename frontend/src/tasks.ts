@@ -56,6 +56,12 @@ class TaskManager {
     }
     return this.tasks;
   }
+  public getTask(id: number) {
+    const task = this.tasks.find((t) => t.id == id);
+    if (task)
+      return task;
+    return null;
+  }
 
   public async createTask(course: string, due_date: string, title: string) {
     const response = await fetch(TASKS_URL, {

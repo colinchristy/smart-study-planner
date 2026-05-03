@@ -40,7 +40,7 @@
     min-width: 5rem;
 }
 .today {
-    background-color: #595459;
+    background-color: #595459 !important;
 }
 .calendar-task-span {
     font-size: 0.8rem;
@@ -50,6 +50,16 @@
     border-radius: 0.5rem;
     white-space: nowrap;
     overflow: hidden;
+    cursor: pointer;
+}
+.calendar-task-span:hover {
+    filter: brightness(1.2);
+    transform: translateY(-2px);
+}
+#calendar-task-info {
+    border: solid 2px #ffffffde;
+    flex-direction: column;
+    min-width: 15rem;
 }
 .completed {
     text-decoration: line-through;

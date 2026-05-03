@@ -115,6 +115,9 @@ class CalendarView {
         if (day1Index == 0) {
             this.dateFirstIndex = new Date(this.year, this.month - 1, 1);
         }
+        
+        const today = new Date();
+
         for (let i = 0; i < this.cells.length; i++) {
             this.cells[i].classList.remove('today');
 
@@ -134,12 +137,15 @@ class CalendarView {
                     // this.month - 2 being negative causes it to update the year to be the previous as well
                     this.dateFirstIndex = new Date(this.year, this.month - 2, date);
                 }
+
+                if (today.getDate() == date && today.getMonth() == this.month - 2 && today.getFullYear() == this.year) {
+                    this.cells[i].classList.add('today');
+                }
             }
             else if (i < day1Index + daysInCurrentMonth) {
                 date = i - day1Index + 1;
                 this.cells[i].classList.remove('different-month');
 
-                const today = new Date();
                 if (today.getDate() == date && today.getMonth() == this.month - 1 && today.getFullYear() == this.year) {
                     this.cells[i].classList.add('today');
                 }
@@ -147,6 +153,10 @@ class CalendarView {
             else {
                 date = i - (day1Index + daysInCurrentMonth) + 1;
                 this.cells[i].classList.add('different-month');
+
+                if (today.getDate() == date && today.getMonth() == this.month && today.getFullYear() == this.year) {
+                    this.cells[i].classList.add('today');
+                }
             }
             const dateDiv = this.cells[i].querySelector('.cell-date') as HTMLDivElement;
             dateDiv.innerText = String(date);
@@ -178,7 +188,7 @@ class CalendarView {
         const index = this.getCellIndex(new Date(task.due_date));
         const tasksDiv = this.cells[index].querySelector('.cell-tasks') as HTMLDivElement;
         const possibleCompletedClass = (task.status == 'completed') ? 'completed' : '';
-        tasksDiv.innerHTML += `<span class="calendar-task-span ${possibleCompletedClass}">${task.title}</span>`;
+        tasksDiv.innerHTML += `<span class="calendar-task-span ${possibleCompletedClass}" task-id="${task.id}">${task.title}</span>`;
         console.log("Added task");
     }
 

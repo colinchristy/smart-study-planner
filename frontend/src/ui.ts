@@ -110,9 +110,17 @@ document.addEventListener('click', async (e) => {
 
     const target = e.target as HTMLElement;
 
-    // if (!target.closest('#context-menu')) {
-    //     unselectTaskCard();
-    // }
+    if (target.id == 'overlay') {
+        hideOverlay();
+    }
+    if (!target.closest('#context-menu')) {
+        removeExistingContextMenu();
+    }
+
+    // Check if clicked off calendar-task-info
+    if (!target.closest('#calendar-task-info')) {
+        removeExistingCalendarTaskInfo();
+    }
 
     // Check if clicked within task card
     const clickedTaskCard = target.closest('.task.card') as HTMLElement;
@@ -129,14 +137,21 @@ document.addEventListener('click', async (e) => {
             const mainList = document.querySelector('#main-task-list') as HTMLDivElement;
             taskManager.updateTaskUI(mainList);
         }
+        else {
+            renderContextMenu(e.clientX, e.clientY);
+        }
+    }
+
+    // Check if clicked calendar-task-span
+    const clickedTaskSpan = target.closest('.calendar-task-span') as HTMLSpanElement;
+    if (clickedTaskSpan) {
+        const taskId = Number(clickedTaskSpan.getAttribute('task-id'));
+        const task = taskManager.getTask(taskId);
+        if (task) {
+            renderCalendarTaskInfo(e.clientX, e.clientY, task);
+        }
     }
     
-    if (target.id == 'overlay') {
-        hideOverlay();
-    }
-    if (!target.closest('#context-menu')) {
-        removeExistingContextMenu();
-    }
 });
 function getContextMenuContent() {
     const content = document.createElement('div');
@@ -167,6 +182,36 @@ function removeExistingContextMenu() {
     const contextMenu = document.querySelector('#context-menu') as HTMLElement;
     if (contextMenu) contextMenu.remove();
 }
+
+function getCalendarTaskInfoContent(task: Task) {
+    const content: HTMLDivElement = document.createElement('div');
+    content.innerHTML = `
+            <div class="task-title-group">
+              <div class="class-name">${task.course}</div>
+              <div class="task-name">${task.title}</div>
+            </div>
+            <div class="task-completion-group">
+              <div class="task-due-date">Due ${task.due_date}</div>
+              <input type="checkbox" ${(task.status == "completed") ? 'checked' : ''}>
+            </div>`
+    content.id = 'calendar-task-info';
+    content.classList.add('task', 'card');
+    content.setAttribute('task-id', String(task.id));
+    return content;
+}
+function renderCalendarTaskInfo(x: number, y: number, task: Task) {
+    removeExistingCalendarTaskInfo();
+    const calendarTaskInfo = getCalendarTaskInfoContent(task);
+    document.body.append(calendarTaskInfo);
+    calendarTaskInfo.style.position = 'fixed';
+    calendarTaskInfo.style.top = String(y) + "px";
+    calendarTaskInfo.style.left = String(x) + "px";
+}
+function removeExistingCalendarTaskInfo() {
+    const calendarTaskInfo = document.querySelector('#calendar-task-info') as HTMLElement;
+    if (calendarTaskInfo) calendarTaskInfo.remove();
+}
+
 function getDeleteWarningContent(titleGroupContents: string) {
     const content: HTMLDivElement = document.createElement('div');
     content.innerHTML = `<div style="font-size: 2rem;">Delete Task</div>
@@ -300,7 +345,6 @@ document.addEventListener('contextmenu', (e) => {
         selectTaskCard(clickedTaskCard);
         renderContextMenu(e.clientX, e.clientY);
     }
-    // Have popup when hover on calendar task span be a div of these classes so that it can use the same thing?
 });
 let scrolling = false;
 document.addEventListener(

@@ -134,7 +134,8 @@ h1 {
 }
 
 .task:hover {
-  filter: drop-shadow(0 0 0.75em #4349bebd);
+  filter: drop-shadow(0 0 0.75em #4349bebd) brightness(1.2);
+  transform: translateY(-2px);
 }
 .task.selected {
   filter: brightness(1.1);
