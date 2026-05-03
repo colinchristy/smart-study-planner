@@ -269,3 +269,6 @@ button.warning:hover {
 .hide {
   display: none !important;
 }
+::-webkit-scrollbar {
+  display: none;
+}

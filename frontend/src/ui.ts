@@ -192,8 +192,8 @@ async function onConfirmDeleteClicked() {
     if (!id) return;
 
     console.log(await taskManager.deleteTask(id));
-    
-    selectedTask.remove();
+    const mainList = document.querySelector('#main-task-list') as HTMLDivElement;
+    taskManager.updateTaskUI(mainList);
     hideOverlay();
 }
 function getEditTaskContent() {
@@ -297,4 +297,5 @@ document.addEventListener('contextmenu', (e) => {
         selectTaskCard(clickedTaskCard);
         renderContextMenu(e.clientX, e.clientY);
     }
+    // Have popup when hover on calendar task span be a div of these classes so that it can use the same thing?
 });
