@@ -100,10 +100,12 @@ async function onCreateClassClicked() {
 function selectTaskCard(taskCard: HTMLElement) {
     unselectTaskCard();
     taskCard.classList.add('selected');
+    taskManager.setLastSelectedTaskId(Number(taskCard.getAttribute('task-id')));
 }
 function unselectTaskCard() {
     const oldSelectedTaskCard = document.querySelector('.task.card.selected');
     if (oldSelectedTaskCard) oldSelectedTaskCard.classList.remove('selected');
+    taskManager.setLastSelectedTaskId(-1);
 }
 document.addEventListener('click', async (e) => {
     if (!e || !e?.target) return;
@@ -202,10 +204,15 @@ function getCalendarTaskInfoContent(task: Task) {
 function renderCalendarTaskInfo(x: number, y: number, task: Task) {
     removeExistingCalendarTaskInfo();
     const calendarTaskInfo = getCalendarTaskInfoContent(task);
+
     document.body.append(calendarTaskInfo);
-    calendarTaskInfo.style.position = 'fixed';
-    calendarTaskInfo.style.top = String(y) + "px";
-    calendarTaskInfo.style.left = String(x) + "px";
+
+    const height = calendarTaskInfo.offsetHeight;
+    const width = calendarTaskInfo.offsetWidth;
+    const yPosition = (window.innerHeight < y + height) ? y - height : y;
+    const xPosition = (window.innerWidth < x + width) ? x - width : x;
+    calendarTaskInfo.style.top = String(yPosition) + "px";
+    calendarTaskInfo.style.left = String(xPosition) + "px";
 }
 function removeExistingCalendarTaskInfo() {
     const calendarTaskInfo = document.querySelector('#calendar-task-info') as HTMLElement;
@@ -234,12 +241,11 @@ function showDeleteWarningOverlay() {
     cancelDeleteButton.addEventListener('click', hideOverlay);
 }
 async function onConfirmDeleteClicked() {
-    const selectedTask = document.querySelector('.task.card.selected') as HTMLElement;
-    const id = selectedTask.getAttribute('task-id');
+    const id = taskManager.getLastSelectedTaskId();
 
     if (!id) return;
 
-    console.log(await taskManager.deleteTask(id));
+    console.log(await taskManager.deleteTask(String(id)));
     const mainList = document.querySelector('#main-task-list') as HTMLDivElement;
     taskManager.updateTaskUI(mainList);
     hideOverlay();
@@ -293,17 +299,23 @@ function showEditTaskOverlay() {
     saveEditsButton.addEventListener('click', onEditTaskClicked);
 }
 async function onEditTaskClicked() {
-    const selectedTask = document.querySelector('.task.card.selected') as HTMLElement;
-    const id = selectedTask.getAttribute('task-id');
+    const id = taskManager.getLastSelectedTaskId();
 
     if (!id) {
         alert("Error: 'id' for task not found.");
         return;
     }
 
-    const className = selectedTask.querySelector('.class-name')?.textContent;
-    const taskName = selectedTask.querySelector('.task-name')?.textContent;
-    const taskDueDate = selectedTask.querySelector('.task-due-date')?.textContent.slice(4);
+    const task = taskManager.getTask(id);
+
+    if (!task ) {
+        alert("Error: Could not find task for id.");
+        return;
+    }
+
+    const className = task.course;
+    const taskName = task.title;
+    const taskDueDate = task.due_date as unknown as String;
 
     const selectClass = document.querySelector('#select-class') as HTMLSelectElement;
     const inputTitle = document.querySelector('#input-title') as HTMLInputElement;
@@ -321,7 +333,7 @@ async function onEditTaskClicked() {
     }
 
 
-    if (!await taskManager.updateTaskData(id, classValue, dueDate, title)) {
+    if (!await taskManager.updateTaskData(String(id), classValue, dueDate, title)) {
         alert('An error occurred when creating a task. Please make sure to fill out all fields.');
         return;
     }

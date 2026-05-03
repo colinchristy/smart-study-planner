@@ -57,6 +57,7 @@
     transform: translateY(-2px);
 }
 #calendar-task-info {
+    position: fixed;
     border: solid 2px #ffffffde;
     flex-direction: column;
     min-width: 15rem;

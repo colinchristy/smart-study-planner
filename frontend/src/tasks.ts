@@ -15,9 +15,11 @@ export type Task = {
 const TASKS_URL = API_URL + 'tasks/';
 class TaskManager {
   private tasks: Task[];
+  private lastSelectedTaskId: number;
 
   public constructor() {
     this.tasks = [];
+    this.lastSelectedTaskId = -1;
   }
 
   private async fetchTasks(): Promise<Task[]> {
@@ -145,6 +147,12 @@ class TaskManager {
       this.tasks = this.tasks.filter((task) => task.id != Number(id));
     }
     return success;
+  }
+  public getLastSelectedTaskId() {
+    return this.lastSelectedTaskId;
+  }
+  public setLastSelectedTaskId(id: number) {
+    this.lastSelectedTaskId = id;
   }
 }
 
