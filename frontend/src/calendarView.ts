@@ -1,5 +1,6 @@
 import './calendarView.css';
 import { taskManager, type Task } from './tasks';
+import { classManager } from './classes';
 
 class CalendarView {
     private month: number;
@@ -188,7 +189,7 @@ class CalendarView {
         const index = this.getCellIndex(new Date(task.due_date));
         const tasksDiv = this.cells[index].querySelector('.cell-tasks') as HTMLDivElement;
         const possibleCompletedClass = (task.status == 'completed') ? 'completed' : '';
-        tasksDiv.innerHTML += `<span class="calendar-task-span ${possibleCompletedClass}" task-id="${task.id}">${task.title}</span>`;
+        tasksDiv.innerHTML += `<span class="calendar-task-span ${possibleCompletedClass}" task-id="${task.id}" style="background-color:${classManager.getClassColorByName(task.course)}">${task.title}</span>`;
         console.log("Added task");
     }
 

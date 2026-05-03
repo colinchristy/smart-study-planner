@@ -10,6 +10,7 @@ import './style.css'
 await auth.requireAuth();
 
 await classManager.fetchClasses();
+classManager.updateClassList();
 
 const buttonSignOut = document.querySelector('#button-sign-out') as HTMLButtonElement;
 
@@ -27,14 +28,6 @@ if (classManager.getClasses().length == 0) buttonCreateTask.disabled = true;
 buttonCreateTask.addEventListener('click', showCreateTaskOverlay);
 buttonCreateClass.addEventListener('click', showCreateClassOverlay);
 
-// console.log(createTask('C486', '2026-02-15', 'Report 4'));
-
-// for (let i = 11; i < 20; i++) {
-//     createTask('C486', `2026-04-${i}`, 'Homework ' + i);
-// }
-// for (let i = 100; i < 130; i++) {
-//     deleteTask(String(i));
-// }
 const calendarViewContainer = document.querySelector('#calendar-view-container') as HTMLDivElement;
 export const calendarView = new CalendarView(calendarViewContainer);
 

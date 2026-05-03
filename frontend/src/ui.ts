@@ -10,7 +10,7 @@ export function showOverlay(content: HTMLDivElement) {
 export function createTaskElement(task: Task) {
   return `<div class="task card" task-id="${task.id}">
             <div class="task-title-group">
-              <div class="class-name">${task.course}</div>
+              <div class="class-name" style="background-color:${classManager.getClassColorByName(task.course)}">${task.course}</div>
               <div class="task-name">${task.title}</div>
             </div>
             <div class="task-completion-group">
@@ -50,6 +50,25 @@ export function getCreateClassContent() {
     content.innerHTML = `<div style="font-size: 2rem;">New Class</div>
                         <label for="course">Course Name</label>
                         <input type="text" name="course" id="input-course">
+                        <label for="color">Color</label>
+                        <div class="flex flex-row gap-05" style="justify-content: space-between">
+                            <input type="radio" id="color-red" name="color" value="hsl(0, 50%, 50%)" checked>
+                            <label class="color-label" for="color-red"></label>
+                            <input type="radio" id="color-orange" name="color" value="hsl(20, 50%, 50%)">
+                            <label class="color-label" for="color-orange"></label>
+                            <input type="radio" id="color-yellow" name="color" value="hsl(55, 91%, 30%)">
+                            <label class="color-label" for="color-yellow"></label>
+                            <input type="radio" id="color-green" name="color" value="hsl(127, 52%, 42%)">
+                            <label class="color-label" for="color-green"></label>
+                            <input type="radio" id="color-blue" name="color" value="hsl(210, 50%, 50%)">
+                            <label class="color-label" for="color-blue"></label>
+                            <input type="radio" id="color-indigo" name="color" value="hsl(237, 50%, 50%)">
+                            <label class="color-label" for="color-indigo"></label>
+                            <input type="radio" id="color-purple" name="color" value="hsl(263, 50%, 50%)">
+                            <label class="color-label" for="color-purple"></label>
+                            <input type="radio" id="color-pink" name="color" value="hsl(304, 50%, 50%)">
+                            <label class="color-label" for="color-pink"></label>
+                        </div>
                         <button type="submit" id="button-overlay-create-class">Create</button>`;
     return content;
 }
@@ -86,9 +105,17 @@ async function onCreateTaskClicked() {
 }
 async function onCreateClassClicked() {
     const inputCourse = document.querySelector('#input-course') as HTMLInputElement;
+    const colorRadioButtons = document.getElementsByName('color') as unknown as HTMLInputElement[];
 
     const course = inputCourse.value;
-    if (!await classManager.createClass(course)) {
+    let color = 'hsl(237, 50%, 50%)';
+    colorRadioButtons.forEach((radio) => {
+        if (radio.checked) {
+            color = radio.value;
+        }
+    });
+
+    if (!await classManager.createClass(course, color)) {
         alert('An error occurred when creating a class.');
         return;
     }

@@ -53,7 +53,7 @@ class ClassManager {
     if (this.classes.length > 0) buttonCreateTask.disabled = false;
   }
 
-  public async createClass(name: string) {
+  public async createClass(name: string, color: string) {
     const response = await fetch(CLASSES_URL, {
       method: 'POST',
       headers: {
@@ -71,8 +71,43 @@ class ClassManager {
     console.log(data);
     if (!response.ok || response.status != 201) return false;
 
+    this.setClassColor(data.id, color);
+
     await this.fetchClasses();
+    this.updateClassList();
     return data;
+  }
+
+  public getClassColor(id: number) {
+    return localStorage.getItem(`class-color-${id}`);
+  }
+  public setClassColor(id: number, colorHex: string) {
+    localStorage.setItem(`class-color-${id}`, colorHex);
+  }
+
+  public getClassColorByName(name: string) {
+    const c = this.classes.find((c) => c.name === name);
+    if (!c) {
+      return "hsl(237, 50%, 50%)";
+    }
+    
+    const color = localStorage.getItem(`class-color-${c.id}`);
+    if (!color) {
+      return "hsl(237, 50%, 50%)";
+    }
+    return color;
+  }
+
+  public updateClassList() {
+    const classListElement = document.querySelector('#class-list') as HTMLDivElement;
+    const classes = classManager.getClasses();
+
+    classListElement.innerHTML = '';
+    classes.forEach((c) => {
+      const classDivContent = `<div class="class-list-item" class-id="${c.id}" style="background-color: ${this.getClassColor(c.id)}">${c.name}</div>`;
+      classListElement.innerHTML += classDivContent;
+      
+    })
   }
 }
 
