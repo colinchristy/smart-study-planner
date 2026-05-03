@@ -39,13 +39,21 @@
     padding: 0.25rem;
     min-width: 5rem;
 }
+.today {
+    background-color: #595459;
+}
 .calendar-task-span {
     font-size: 0.8rem;
+    color: #ffffffde;
     background-color: #3d43c3;
     padding: 0.25rem;
     border-radius: 0.5rem;
     white-space: nowrap;
     overflow: hidden;
+}
+.completed {
+    text-decoration: line-through;
+    filter: brightness(0.67);
 }
 .different-month {
     color: #ffffff3a;

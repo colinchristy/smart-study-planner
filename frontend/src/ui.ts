@@ -105,7 +105,7 @@ function unselectTaskCard() {
     const oldSelectedTaskCard = document.querySelector('.task.card.selected');
     if (oldSelectedTaskCard) oldSelectedTaskCard.classList.remove('selected');
 }
-document.addEventListener('click', (e) => {
+document.addEventListener('click', async (e) => {
     if (!e || !e?.target) return;
 
     const target = e.target as HTMLElement;
@@ -124,7 +124,10 @@ document.addEventListener('click', (e) => {
             const taskId = clickedTaskCard.getAttribute('task-id') as string;
             const newStatus = (clickedCheckbox.checked) ? 'completed' : 'pending';
 
-            taskManager.updateTaskStatus(taskId, newStatus);
+            await taskManager.updateTaskStatus(taskId, newStatus);
+            
+            const mainList = document.querySelector('#main-task-list') as HTMLDivElement;
+            taskManager.updateTaskUI(mainList);
         }
     }
     
@@ -148,7 +151,7 @@ function renderContextMenu(x: number, y: number) {
     removeExistingContextMenu();
     const contextMenu = getContextMenuContent();
     document.body.append(contextMenu);
-    contextMenu.style.position = 'absolute';
+    // contextMenu.style.position = 'absolute';
     contextMenu.style.top = String(y) + "px";
     contextMenu.style.left = String(x) + "px";
 
@@ -299,3 +302,19 @@ document.addEventListener('contextmenu', (e) => {
     }
     // Have popup when hover on calendar task span be a div of these classes so that it can use the same thing?
 });
+let scrolling = false;
+document.addEventListener(
+    'scroll',
+    () => {
+        if (scrolling) {
+            return;
+        }
+        scrolling = true;
+        
+        removeExistingContextMenu();
+        setTimeout(() => {
+            scrolling = false;
+        }, 300);
+    },
+    { passive: true }
+);

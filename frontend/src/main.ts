@@ -15,10 +15,9 @@ const buttonSignOut = document.querySelector('#button-sign-out') as HTMLButtonEl
 
 buttonSignOut.addEventListener('click', () => { auth.signOut() });
 
-const greetingElement = document.querySelector('#user-greeting') as HTMLElement;
+const usernameElement = document.querySelector('#username') as HTMLElement;
 const storedUsername = auth.getUsername();
-const greeting = (storedUsername) ? `Hello ${storedUsername}!` : 'Hello student!';
-greetingElement.innerText = greeting;
+usernameElement.innerText = (storedUsername) ? storedUsername : '';
 
 const mainList = document.querySelector('#main-task-list') as HTMLDivElement;
 const buttonCreateTask = document.querySelector('#button-create-task') as HTMLButtonElement;

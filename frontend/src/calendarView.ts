@@ -116,6 +116,8 @@ class CalendarView {
             this.dateFirstIndex = new Date(this.year, this.month - 1, 1);
         }
         for (let i = 0; i < this.cells.length; i++) {
+            this.cells[i].classList.remove('today');
+
             if (i >= this.weeksInMonth * 7) {
                 this.cells[i].classList.add('hide');
                 continue;
@@ -136,6 +138,11 @@ class CalendarView {
             else if (i < day1Index + daysInCurrentMonth) {
                 date = i - day1Index + 1;
                 this.cells[i].classList.remove('different-month');
+
+                const today = new Date();
+                if (today.getDate() == date && today.getMonth() == this.month - 1 && today.getFullYear() == this.year) {
+                    this.cells[i].classList.add('today');
+                }
             }
             else {
                 date = i - (day1Index + daysInCurrentMonth) + 1;
@@ -170,7 +177,8 @@ class CalendarView {
     private addTaskSpan(task: Task) {
         const index = this.getCellIndex(new Date(task.due_date));
         const tasksDiv = this.cells[index].querySelector('.cell-tasks') as HTMLDivElement;
-        tasksDiv.innerHTML += `<span class="calendar-task-span">${task.title}</span>`;
+        const possibleCompletedClass = (task.status == 'completed') ? 'completed' : '';
+        tasksDiv.innerHTML += `<span class="calendar-task-span ${possibleCompletedClass}">${task.title}</span>`;
         console.log("Added task");
     }
 

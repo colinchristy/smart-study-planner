@@ -81,11 +81,9 @@ h1 {
   z-index: 5;
   background-color: #242424;
 }
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+#username {
+  padding: 1rem;
+  font-weight: 400;
 }
 
 #main-task-list {
@@ -218,7 +216,7 @@ input[type='checkbox'] {
   border-radius: 1rem;
 }
 #context-menu {
-  position: absolute;
+  position: fixed;
   display: flex;
   flex-direction: column;
   background-color: #2b2b2b;

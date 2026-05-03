@@ -118,7 +118,12 @@ class TaskManager {
     console.log(response);
     const data = await response.json();
     console.log(data);
-    return response.ok && response.status == 200;
+    const success = response.ok && response.status == 200;
+    if (success) {
+      this.tasks = this.tasks.filter((task) => task.id != Number(id));
+      this.tasks.push(data);
+    }
+    return success;
   }
 
   async deleteTask(id: string) {
