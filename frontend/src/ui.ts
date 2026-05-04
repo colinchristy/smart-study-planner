@@ -216,7 +216,7 @@ function getCalendarTaskInfoContent(task: Task) {
     const content: HTMLDivElement = document.createElement('div');
     content.innerHTML = `
             <div class="task-title-group">
-              <div class="class-name">${task.course}</div>
+              <div class="class-name" style="background-color:${classManager.getClassColorByName(task.course)}">${task.course}</div>
               <div class="task-name">${task.title}</div>
             </div>
             <div class="task-completion-group">
